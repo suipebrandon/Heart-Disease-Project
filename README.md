@@ -1,133 +1,179 @@
-# Heart Disease Prediction ML 🫀
+# Heart Disease Risk Prediction System
 
-A machine learning application that predicts the risk of heart disease using patient data. Includes a Flask web interface for easy interaction.
+A BSc final year academic project that uses machine learning to estimate heart disease risk from patient clinical data. The project includes model training notebooks, saved model artifacts, and a Flask web application for prediction, interpretation, history tracking, and model information.
 
-## Features
+## Project Aim
 
-- **Machine Learning Models**: Trained and compared multiple models including Logistic Regression, SVM, Decision Tree, and Random Forest
-- **Best Model**: Random Forest Classifier with hyperparameter tuning via GridSearchCV
-- **Web Interface**: Flask-based web application for making predictions
-- **Data Analysis**: Comprehensive Exploratory Data Analysis (EDA) with visualizations
-- **Model Evaluation**: ROC-AUC curves, confusion matrices, and classification reports
+The aim of this project is to develop a machine learning-based web application that can support heart disease risk assessment using selected clinical features from the UCI Heart Disease dataset.
+
+This system is for educational and research purposes only. It is not a substitute for professional medical diagnosis or advice.
+
+## MVP Features
+
+- Patient risk assessment form using 13 clinical input features
+- Backend validation for numeric ranges and categorical values
+- Random Forest prediction with probability output
+- Risk bands: Low Risk, Moderate Risk, and High Risk
+- Rule-based explanation of important submitted risk indicators
+- Local SQLite prediction history
+- Model information page for academic defense and transparency
+- JSON prediction API endpoint
+- Print-friendly assessment report
 
 ## Dataset
 
-- **Source**: UCI Heart Disease Dataset
-- **Samples**: 303 patient records
-- **Features**: 13 clinical parameters (age, cholesterol, blood pressure, etc.)
-- **Target**: Binary classification (presence or absence of heart disease)
+- Source: UCI Heart Disease Dataset
+- Local file: `heart_disease_uci.csv`
+- Records in local CSV: 920
+- Target: binary heart disease classification
+- Original target column: `num`
+- Binary conversion: `0` means no heart disease, values greater than `0` mean heart disease presence
+
+The local dataset combines records from Cleveland, Hungary, Switzerland, and VA Long Beach.
 
 ## Project Structure
 
-```
+```text
 .
-├── Heart_Disease_Prediction.ipynb     # Main ML notebook with model training
-├── ml.ipynb                           # Additional ML experiments
-├── heart_disease_uci.csv              # Dataset
-├── heart_disease_model.pkl            # Trained Random Forest model
-├── scaler.pkl                         # StandardScaler for preprocessing
-├── flask_app/
-│   ├── app.py                         # Flask application
-│   └── templates/
-│       └── index.html                 # Web interface
-└── README.md
+├── Heart_Disease_Prediction.ipynb
+├── ml.ipynb
+├── heart_disease_uci.csv
+├── heart_disease_model.pkl
+├── scaler.pkl
+├── requirements.txt
+├── MVP_IMPLEMENTATION_PLAN.md
+├── README.md
+└── flask_app/
+    ├── app.py
+    ├── static/
+    │   └── styles.css
+    └── templates/
+        ├── index.html
+        ├── history.html
+        └── model_info.html
 ```
+
+## Technologies Used
+
+- Python
+- Flask
+- pandas
+- numpy
+- scikit-learn
+- joblib
+- SQLite
+- Bootstrap
+- Jupyter Notebook
 
 ## Installation
 
-### Prerequisites
-- Python 3.8+
-- pip or conda
+1. Create a virtual environment:
 
-### Setup
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/Heart-Disease-Prediction-ML.git
-cd Heart-Disease-Prediction-ML
-```
-
-2. **Create a virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. **Install dependencies**
+2. Activate the virtual environment:
+
+```bash
+venv\Scripts\activate
+```
+
+On macOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-## Usage
+## Running the Flask App
 
-### Option 1: Run the Flask Web Application
+From the project root:
 
 ```bash
 cd flask_app
 python app.py
 ```
 
-Then open your browser and navigate to `http://127.0.0.1:5000`
+Then open:
 
-### Option 2: Run the Jupyter Notebook
-
-1. Start Jupyter Notebook:
-```bash
-jupyter notebook
+```text
+http://127.0.0.1:5000
 ```
 
-2. Open `Heart_Disease_Prediction.ipynb` and run all cells
+## Application Pages
 
-## Model Performance
+- `/` - patient assessment form and prediction result
+- `/history` - recent saved predictions
+- `/model-info` - dataset, model, metrics, and limitations
+- `/api/predict` - JSON prediction endpoint
 
-- **Accuracy**: ~85%
-- **ROC-AUC Score**: ~0.90
-- **Cross-Validation Score**: Consistent across folds
+## API Example
 
-## Input Features
+Send a POST request to:
 
-The model accepts the following patient parameters:
+```text
+/api/predict
+```
 
-| Feature | Type | Range |
-|---------|------|-------|
-| Age | Numeric | Years |
-| Resting Blood Pressure | Numeric | mmHg |
-| Serum Cholesterol | Numeric | mg/dl |
-| Max Heart Rate | Numeric | bpm |
-| ST Depression | Numeric | Continuous |
-| Number of Vessels | Numeric | 0-4 |
-| Sex | Categorical | Male/Female |
-| Chest Pain Type | Categorical | 4 types |
-| Fasting Blood Sugar | Categorical | True/False |
-| Rest ECG | Categorical | 3 types |
-| Exercise Induced Angina | Categorical | True/False |
-| Slope | Categorical | 3 types |
-| Thalassemia | Categorical | 3 types |
+Example JSON body:
 
-## Technologies Used
+```json
+{
+  "age": 55,
+  "sex": "Male",
+  "cp": "asymptomatic",
+  "trestbps": 140,
+  "chol": 250,
+  "fbs": "False",
+  "restecg": "normal",
+  "thalch": 120,
+  "exang": "True",
+  "oldpeak": 2.1,
+  "slope": "flat",
+  "ca": 2,
+  "thal": "reversable"
+}
+```
 
-- **ML Libraries**: scikit-learn, pandas, numpy
-- **Visualization**: matplotlib, seaborn
-- **Web Framework**: Flask
-- **Model Serialization**: joblib
+Example response:
 
-## Future Improvements
+```json
+{
+  "risk": "High Risk",
+  "risk_band": "high",
+  "probability": 0.82,
+  "probability_percent": 82.0,
+  "message": "The model predicts a high likelihood of heart disease.",
+  "explanations": [],
+  "timestamp": "2026-06-13 12:00:00"
+}
+```
 
-- Deploy on cloud platform (Heroku, AWS, Google Cloud)
-- Add more data and retrain models
-- Implement API endpoints
-- Add user authentication
-- Create mobile app version
-- Implement model explainability (SHAP, LIME)
+## Model Summary
 
-## License
+The main notebook compares multiple machine learning models, including:
 
-This project is open source and available under the MIT License.
+- Logistic Regression
+- Support Vector Machine
+- Decision Tree
+- Random Forest
+
+The final saved model is a tuned Random Forest classifier. The README and notebook report approximately 85% accuracy and approximately 0.90 ROC-AUC.
+
+## Academic Limitations
+
+- The system is trained on a public dataset and has not been clinically validated.
+- Some dataset fields contain missing values.
+- The application provides decision-support information only.
+- The result should always be interpreted by qualified medical professionals.
+- Further work could include SHAP/LIME explainability, cloud deployment, authentication, and larger clinical datasets.
 
 ## Author
 
-Your Name - [GitHub Profile](https://github.com/yourusername)
-
-## Disclaimer
-
-⚠️ **This application is for educational and research purposes only.** It should not be used as a substitute for professional medical advice. Always consult with healthcare professionals for medical decisions.
+Final year BSc project.
