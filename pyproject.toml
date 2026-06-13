@@ -2,3 +2,9 @@
 name = "heart-disease-risk-prediction"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
+dependencies = [
+    "flask==3.0.3",
+    "numpy==1.26.4",
+    "scikit-learn==1.4.2",
+    "joblib==1.4.2",
+]
