@@ -1,18 +1,23 @@
 from datetime import datetime
 import json
+import os
 import sqlite3
+import tempfile
 from pathlib import Path
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 import joblib
-import pandas as pd
 
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
 MODEL_PATH = PROJECT_DIR / "heart_disease_model.pkl"
 SCALER_PATH = PROJECT_DIR / "scaler.pkl"
-DB_PATH = BASE_DIR / "heart_predictions.db"
+DB_PATH = (
+    Path(tempfile.gettempdir()) / "heart_predictions.db"
+    if os.environ.get("VERCEL")
+    else BASE_DIR / "heart_predictions.db"
+)
 
 app = Flask(__name__)
 
@@ -154,7 +159,7 @@ def build_model_features(cleaned):
         "thal_normal": 1 if cleaned["thal"] == "normal" else 0,
         "thal_reversable defect": 1 if cleaned["thal"] == "reversable" else 0,
     }
-    return pd.DataFrame([data], columns=FEATURE_COLUMNS)
+    return [[data[column] for column in FEATURE_COLUMNS]]
 
 
 def classify_risk(probability):

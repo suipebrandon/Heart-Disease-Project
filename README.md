@@ -106,6 +106,37 @@ Then open:
 http://127.0.0.1:5000
 ```
 
+## Deploying on Vercel
+
+This repository is prepared for Vercel with:
+
+- `app.py` as the root Python entrypoint for Vercel
+- `vercel.json` to route all requests to the Flask app
+- `.vercelignore` to keep notebooks, datasets, local databases, and cache files out of deployments
+- `requirements.txt` containing only runtime dependencies needed by the web app
+- `pyproject.toml` pinned to Python 3.12 for Vercel compatibility
+
+The following files must remain committed because the live app loads them at startup:
+
+```text
+heart_disease_model.pkl
+scaler.pkl
+```
+
+Prediction history uses SQLite locally. On Vercel, the database is stored in the serverless temporary directory, so history may reset between deployments or function instances.
+
+To deploy:
+
+```bash
+vercel
+```
+
+For production:
+
+```bash
+vercel --prod
+```
+
 ## Application Pages
 
 - `/` - patient assessment form and prediction result

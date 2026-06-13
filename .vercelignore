@@ -1,0 +1,43 @@
+# Keep Vercel deployments small. The trained model artifacts below are required:
+# heart_disease_model.pkl
+# scaler.pkl
+
+.git/
+.github/
+.venv/
+venv/
+env/
+ENV/
+virtualenv/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+htmlcov/
+.coverage
+
+.env
+.env.*
+!.env.example
+
+*.db
+*.sqlite
+*.sqlite3
+*.log
+logs/
+
+*.ipynb
+.ipynb_checkpoints/
+heart_disease_uci.csv
+MVP_IMPLEMENTATION_PLAN.md
+redeploy.txt
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
