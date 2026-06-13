@@ -1,0 +1,240 @@
+:root {
+    --bg: #eef4f7;
+    --surface: #ffffff;
+    --surface-soft: #f8fbfc;
+    --border: #dbe5ea;
+    --text: #1f2933;
+    --muted: #64748b;
+    --primary: #0f766e;
+    --primary-dark: #115e59;
+    --accent: #b91c1c;
+    --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+body {
+    min-height: 100vh;
+    background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.10), rgba(185, 28, 28, 0.05)),
+        var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 14px rgba(15, 23, 42, 0.07);
+}
+
+.navbar-brand {
+    color: var(--primary) !important;
+    letter-spacing: 0;
+}
+
+.nav-link {
+    color: #475569;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(15, 118, 110, 0.10);
+    color: var(--primary-dark) !important;
+}
+
+.container {
+    max-width: 1040px;
+}
+
+.page-header {
+    border-left: 5px solid var(--primary);
+    padding-left: 1rem;
+}
+
+.section-title,
+.page-title {
+    color: var(--text);
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.panel-muted {
+    background: var(--surface-soft);
+}
+
+.form-label {
+    color: #334155;
+    font-weight: 700;
+}
+
+.form-text,
+.text-muted {
+    color: var(--muted) !important;
+}
+
+.form-control,
+.form-select {
+    border-color: #cbd5e1;
+    border-radius: 7px;
+    padding: 0.65rem 0.8rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.18);
+}
+
+.btn {
+    border-radius: 7px;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.result-value {
+    font-size: clamp(1.9rem, 5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.report-table th {
+    width: 42%;
+    color: #475569;
+}
+
+.table {
+    --bs-table-striped-bg: #f8fafc;
+}
+
+.table thead th {
+    background: #eaf4f3;
+    color: #334155;
+    font-size: 0.86rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.badge {
+    border-radius: 999px;
+    padding: 0.5rem 0.7rem;
+}
+
+.badge-low {
+    background: #15803d;
+}
+
+.badge-moderate {
+    background: #facc15;
+    color: #1f2933;
+}
+
+.badge-high {
+    background: #dc2626;
+}
+
+.metric {
+    min-height: 112px;
+    border-left: 5px solid var(--primary);
+    background: linear-gradient(180deg, #ffffff, var(--surface-soft));
+    border-radius: 8px;
+}
+
+.metric .h3 {
+    color: var(--primary-dark);
+    font-weight: 800;
+}
+
+.disclaimer {
+    border-left: 5px solid var(--accent);
+}
+
+.history-print-report {
+    display: none;
+}
+
+@media (max-width: 575.98px) {
+    .navbar .container {
+        gap: 0.75rem;
+    }
+
+    .navbar-nav {
+        width: 100%;
+        flex-direction: row;
+        gap: 0.25rem;
+        justify-content: space-between;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.55rem !important;
+    }
+}
+
+@media print {
+    nav,
+    form,
+    .no-print,
+    .alert-danger {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+    }
+
+    .panel {
+        box-shadow: none;
+        border: 1px solid #cbd5e1;
+    }
+
+    .print-area {
+        display: block !important;
+    }
+
+    body.printing-history-report nav,
+    body.printing-history-report .page-header,
+    body.printing-history-report .history-screen {
+        display: none !important;
+    }
+
+    body.printing-history-report .history-print-report {
+        display: none !important;
+    }
+
+    body.printing-history-report .history-print-report.active-print-report {
+        display: block !important;
+    }
+}

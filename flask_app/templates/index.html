@@ -3,154 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heart Disease Prediction</title>
-    <!-- Bootstrap CSS -->
+    <title>Heart Disease Risk Assessment</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .container { max-width: 800px; margin-top: 50px; margin-bottom: 50px; }
-        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .card-header { background-color: #0d6efd; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px; font-weight: bold; }
-        .btn-predict { background-color: #0d6efd; color: white; width: 100%; font-weight: bold; padding: 12px; border-radius: 8px; transition: all 0.3s; }
-        .btn-predict:hover { background-color: #0b5ed7; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .result-box { margin-top: 30px; padding: 20px; border-radius: 10px; text-align: center; }
-        .form-label { font-weight: 500; color: #444; }
-        .form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }
-    </style>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
 </head>
 <body>
-
-<div class="container">
-    <div class="card">
-        <div class="card-header text-center py-3">
-            <h2 class="mb-0">🩺 Heart Disease Risk Assessment</h2>
-        </div>
-        <div class="card-body p-4">
-            <p class="text-muted text-center mb-4">Please enter the patient's information to calculate the probability of heart disease.</p>
-            
-            <form method="POST">
-                <div class="row g-3">
-                    <!-- Age -->
-                    <div class="col-md-6">
-                        <label for="age" class="form-label">Age (Years)</label>
-                        <input type="number" class="form-control" name="age" id="age" value="50" min="1" max="120" required>
-                    </div>
-
-                    <!-- Sex -->
-                    <div class="col-md-6">
-                        <label for="sex" class="form-label">Sex</label>
-                        <select class="form-select" name="sex" id="sex" required>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-
-                    <!-- Chest Pain Type -->
-                    <div class="col-md-6">
-                        <label for="cp" class="form-label">Chest Pain Type</label>
-                        <select class="form-select" name="cp" id="cp" required>
-                            <option value="typical">Typical Angina</option>
-                            <option value="atypical">Atypical Angina</option>
-                            <option value="non-anginal">Non-Anginal Pain</option>
-                            <option value="asymptomatic">Asymptomatic</option>
-                        </select>
-                    </div>
-
-                    <!-- Resting Blood Pressure -->
-                    <div class="col-md-6">
-                        <label for="trestbps" class="form-label">Resting Blood Pressure (mm Hg)</label>
-                        <input type="number" class="form-control" name="trestbps" id="trestbps" value="120" required>
-                    </div>
-
-                    <!-- Serum Cholesterol -->
-                    <div class="col-md-6">
-                        <label for="chol" class="form-label">Serum Cholesterol (mg/dl)</label>
-                        <input type="number" class="form-control" name="chol" id="chol" value="200" required>
-                    </div>
-
-                    <!-- Maximum Heart Rate -->
-                    <div class="col-md-6">
-                        <label for="thalch" class="form-label">Maximum Heart Rate Achieved</label>
-                        <input type="number" class="form-control" name="thalch" id="thalch" value="150" required>
-                    </div>
-
-                    <!-- Fasting Blood Sugar -->
-                    <div class="col-md-4">
-                        <label for="fbs" class="form-label">Fasting Blood Sugar > 120 mg/dl</label>
-                        <select class="form-select" name="fbs" id="fbs" required>
-                            <option value="False">False</option>
-                            <option value="True">True</option>
-                        </select>
-                    </div>
-
-                    <!-- Resting Electrocardiographic Results -->
-                    <div class="col-md-4">
-                        <label for="restecg" class="form-label">Resting ECG Results</label>
-                        <select class="form-select" name="restecg" id="restecg" required>
-                            <option value="normal">Normal</option>
-                            <option value="st-t">ST-T Wave Abnormality</option>
-                            <option value="lv-hyper">LV Hypertrophy</option>
-                        </select>
-                    </div>
-
-                    <!-- Exercise Induced Angina -->
-                    <div class="col-md-4">
-                        <label for="exang" class="form-label">Exercise Induced Angina</label>
-                        <select class="form-select" name="exang" id="exang" required>
-                            <option value="False">False</option>
-                            <option value="True">True</option>
-                        </select>
-                    </div>
-
-                    <!-- Oldpeak (ST depression induced by exercise relative to rest) -->
-                    <div class="col-md-4">
-                        <label for="oldpeak" class="form-label">ST Depression (Oldpeak)</label>
-                        <input type="number" step="0.1" class="form-control" name="oldpeak" id="oldpeak" value="1.0" required>
-                    </div>
-
-                    <!-- Slope of the Peak Exercise ST Segment -->
-                    <div class="col-md-4">
-                        <label for="slope" class="form-label">Peak Exercise ST Slope</label>
-                        <select class="form-select" name="slope" id="slope" required>
-                            <option value="upsloping">Upsloping</option>
-                            <option value="flat">Flat</option>
-                            <option value="downsloping">Downsloping</option>
-                        </select>
-                    </div>
-
-                    <!-- Number of Major Vessels -->
-                    <div class="col-md-4">
-                        <label for="ca" class="form-label">Number of Major Vessels (0-3)</label>
-                        <input type="number" class="form-control" name="ca" id="ca" min="0" max="3" value="0" required>
-                    </div>
-
-                    <!-- Thalassemia -->
-                    <div class="col-md-12">
-                        <label for="thal" class="form-label">Thalassemia</label>
-                        <select class="form-select" name="thal" id="thal" required>
-                            <option value="normal">Normal</option>
-                            <option value="fixed">Fixed Defect</option>
-                            <option value="reversable">Reversable Defect</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-predict">Assess Risk</button>
-                </div>
-            </form>
-
-            {% if prediction_text %}
-            <div class="alert alert-{{ prediction_class }} result-box">
-                <h4 class="alert-heading">Assessment Result</h4>
-                <p class="display-6 mb-0">{{ prediction_text }}</p>
-            </div>
-            {% endif %}
+<nav class="navbar navbar-expand-lg bg-white">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" href="{{ url_for('index') }}">Heart Disease Predictor</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link active" href="{{ url_for('index') }}">Assessment</a>
+            <a class="nav-link" href="{{ url_for('history') }}">History</a>
+            <a class="nav-link" href="{{ url_for('model_info') }}">Model Info</a>
         </div>
     </div>
-</div>
+</nav>
 
-<!-- Bootstrap JS -->
+<main class="container my-4 my-lg-5">
+    <div class="page-header mb-4">
+        <h1 class="section-title">Heart Disease Risk Assessment</h1>
+        <p class="text-muted mb-0">
+            Enter patient clinical values to estimate heart disease risk using the trained Random Forest model.
+        </p>
+    </div>
+
+    {% if errors %}
+    <div class="alert alert-danger">
+        <h2 class="h5">Please correct the following:</h2>
+        <ul class="mb-0">
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="panel p-4 mb-4">
+        <div class="mb-4">
+            <h2 class="h5 fw-bold mb-1">Patient Clinical Information</h2>
+            <p class="text-muted mb-0">Complete the fields below using the patient assessment values.</p>
+        </div>
+        <form method="POST" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="age" class="form-label">Age (years)</label>
+                    <input type="number" class="form-control" name="age" id="age" value="{{ form_values.age }}" min="1" max="120" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="sex" class="form-label">Sex</label>
+                    <select class="form-select" name="sex" id="sex" required>
+                        <option value="Male" {% if form_values.sex == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if form_values.sex == 'Female' %}selected{% endif %}>Female</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="cp" class="form-label">Chest pain type</label>
+                    <select class="form-select" name="cp" id="cp" required>
+                        <option value="typical" {% if form_values.cp == 'typical' %}selected{% endif %}>Typical Angina</option>
+                        <option value="atypical" {% if form_values.cp == 'atypical' %}selected{% endif %}>Atypical Angina</option>
+                        <option value="non-anginal" {% if form_values.cp == 'non-anginal' %}selected{% endif %}>Non-Anginal Pain</option>
+                        <option value="asymptomatic" {% if form_values.cp == 'asymptomatic' %}selected{% endif %}>Asymptomatic</option>
+                    </select>
+                    <div class="form-text">Type of chest pain reported during assessment.</div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="trestbps" class="form-label">Resting blood pressure (mm Hg)</label>
+                    <input type="number" class="form-control" name="trestbps" id="trestbps" value="{{ form_values.trestbps }}" min="70" max="250" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="chol" class="form-label">Serum cholesterol (mg/dl)</label>
+                    <input type="number" class="form-control" name="chol" id="chol" value="{{ form_values.chol }}" min="80" max="700" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="thalch" class="form-label">Maximum heart rate achieved</label>
+                    <input type="number" class="form-control" name="thalch" id="thalch" value="{{ form_values.thalch }}" min="60" max="250" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="fbs" class="form-label">Fasting blood sugar &gt; 120 mg/dl</label>
+                    <select class="form-select" name="fbs" id="fbs" required>
+                        <option value="False" {% if form_values.fbs == 'False' %}selected{% endif %}>False</option>
+                        <option value="True" {% if form_values.fbs == 'True' %}selected{% endif %}>True</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="restecg" class="form-label">Resting ECG results</label>
+                    <select class="form-select" name="restecg" id="restecg" required>
+                        <option value="normal" {% if form_values.restecg == 'normal' %}selected{% endif %}>Normal</option>
+                        <option value="st-t" {% if form_values.restecg == 'st-t' %}selected{% endif %}>ST-T Wave Abnormality</option>
+                        <option value="lv-hyper" {% if form_values.restecg == 'lv-hyper' %}selected{% endif %}>LV Hypertrophy</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="exang" class="form-label">Exercise induced angina</label>
+                    <select class="form-select" name="exang" id="exang" required>
+                        <option value="False" {% if form_values.exang == 'False' %}selected{% endif %}>False</option>
+                        <option value="True" {% if form_values.exang == 'True' %}selected{% endif %}>True</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="oldpeak" class="form-label">ST depression (oldpeak)</label>
+                    <input type="number" step="0.1" class="form-control" name="oldpeak" id="oldpeak" value="{{ form_values.oldpeak }}" min="0" max="10" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="slope" class="form-label">Peak exercise ST slope</label>
+                    <select class="form-select" name="slope" id="slope" required>
+                        <option value="upsloping" {% if form_values.slope == 'upsloping' %}selected{% endif %}>Upsloping</option>
+                        <option value="flat" {% if form_values.slope == 'flat' %}selected{% endif %}>Flat</option>
+                        <option value="downsloping" {% if form_values.slope == 'downsloping' %}selected{% endif %}>Downsloping</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="ca" class="form-label">Number of major vessels (0-3)</label>
+                    <input type="number" class="form-control" name="ca" id="ca" value="{{ form_values.ca }}" min="0" max="3" required>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="thal" class="form-label">Thalassemia</label>
+                    <select class="form-select" name="thal" id="thal" required>
+                        <option value="normal" {% if form_values.thal == 'normal' %}selected{% endif %}>Normal</option>
+                        <option value="fixed" {% if form_values.thal == 'fixed' %}selected{% endif %}>Fixed Defect</option>
+                        <option value="reversable" {% if form_values.thal == 'reversable' %}selected{% endif %}>Reversible Defect</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-4 d-grid d-sm-flex gap-2">
+                <button type="submit" class="btn btn-primary px-4">Assess Risk</button>
+                <button type="button" class="btn btn-outline-secondary px-4" id="clearFormButton">Reset Form</button>
+            </div>
+        </form>
+    </div>
+
+    {% if result %}
+    <section class="panel p-4 print-area">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div>
+                <h2 class="section-title h3">Assessment Result</h2>
+                <p class="text-muted mb-0">Generated at {{ result.timestamp }}</p>
+            </div>
+            <button class="btn btn-outline-primary no-print align-self-start" onclick="window.print()">Print Report</button>
+        </div>
+
+        <div class="alert alert-{{ result.alert_class }} mt-4">
+            <div class="result-value">{{ result.risk_label }}</div>
+            <p class="h4">{{ "%.2f"|format(result.probability_percent) }}% probability</p>
+            <p class="mb-0">{{ result.message }}</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <h3 class="h5">Main Indicators Highlighted</h3>
+                <ul class="mb-0">
+                    {% for explanation in result.explanations %}
+                    <li>{{ explanation }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <h3 class="h5">Submitted Values</h3>
+                <table class="table table-sm report-table mb-0">
+                    <tbody>
+                        <tr><th>Age</th><td>{{ result.inputs.age|int }}</td></tr>
+                        <tr><th>Sex</th><td>{{ result.inputs.sex }}</td></tr>
+                        <tr><th>Chest pain</th><td>{{ result.inputs.cp }}</td></tr>
+                        <tr><th>Blood pressure</th><td>{{ result.inputs.trestbps|int }} mm Hg</td></tr>
+                        <tr><th>Cholesterol</th><td>{{ result.inputs.chol|int }} mg/dl</td></tr>
+                        <tr><th>Max heart rate</th><td>{{ result.inputs.thalch|int }}</td></tr>
+                        <tr><th>Oldpeak</th><td>{{ result.inputs.oldpeak }}</td></tr>
+                        <tr><th>Major vessels</th><td>{{ result.inputs.ca|int }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="alert alert-secondary disclaimer mt-4 mb-0">
+            This application is for educational and research purposes only. It is not a medical diagnosis and should not replace professional medical advice.
+        </div>
+    </section>
+    {% endif %}
+</main>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById("clearFormButton").addEventListener("click", function () {
+        const form = this.closest("form");
+
+        form.querySelectorAll("input").forEach(function (field) {
+            field.value = "";
+        });
+
+        form.querySelectorAll("select").forEach(function (field) {
+            field.selectedIndex = -1;
+        });
+    });
+</script>
 </body>
 </html>
