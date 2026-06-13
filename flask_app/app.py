@@ -24,11 +24,11 @@ app = Flask(__name__)
 try:
     model = joblib.load(MODEL_PATH)
     scaler = joblib.load(SCALER_PATH)
-except FileNotFoundError as exc:
-    raise SystemExit(
-        "Error: heart_disease_model.pkl or scaler.pkl not found. "
-        "Please run the training notebook first."
-    ) from exc
+    MODEL_LOAD_ERROR = None
+except Exception as exc:
+    model = None
+    scaler = None
+    MODEL_LOAD_ERROR = exc
 
 
 FEATURE_COLUMNS = [
@@ -86,6 +86,41 @@ DEFAULT_FORM = {
     "ca": "0",
     "thal": "normal",
 }
+
+
+@app.route("/health")
+def health_check():
+    return jsonify({"status": "ok"})
+
+
+@app.before_request
+def ensure_runtime_ready():
+    if request.endpoint in {"health_check", "static"}:
+        return None
+
+    if MODEL_LOAD_ERROR is not None:
+        return (
+            jsonify(
+                {
+                    "error": "Model artifacts could not be loaded.",
+                    "details": f"{type(MODEL_LOAD_ERROR).__name__}: {MODEL_LOAD_ERROR}",
+                }
+            ),
+            503,
+        )
+
+    if DB_INIT_ERROR is not None:
+        return (
+            jsonify(
+                {
+                    "error": "Prediction history database could not be initialized.",
+                    "details": f"{type(DB_INIT_ERROR).__name__}: {DB_INIT_ERROR}",
+                }
+            ),
+            503,
+        )
+
+    return None
 
 
 def init_db():
@@ -360,7 +395,11 @@ def api_predict():
     )
 
 
-init_db()
+try:
+    init_db()
+    DB_INIT_ERROR = None
+except Exception as exc:
+    DB_INIT_ERROR = exc
 
 
 if __name__ == "__main__":
