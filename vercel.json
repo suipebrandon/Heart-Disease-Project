@@ -1,14 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "app.py": {
-      "excludeFiles": "{*.ipynb,heart_disease_uci.csv,MVP_IMPLEMENTATION_PLAN.md,redeploy.txt,*.db,*.sqlite,*.sqlite3,__pycache__/**,.ipynb_checkpoints/**}"
-    }
-  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/app.py"
+      "destination": "/api/index"
     }
   ]
 }

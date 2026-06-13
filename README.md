@@ -110,7 +110,7 @@ http://127.0.0.1:5000
 
 This repository is prepared for Vercel with:
 
-- `app.py` as the root Python entrypoint for Vercel
+- `api/index.py` as the Python serverless entrypoint for Vercel
 - `vercel.json` to route all requests to the Flask app
 - `.vercelignore` to keep notebooks, datasets, local databases, and cache files out of deployments
 - `requirements.txt` containing only runtime dependencies needed by the web app
